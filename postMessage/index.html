@@ -1,0 +1,26 @@
+<div>index</div>
+<iframe id="frameA" src="frame.html"></iframe>
+<script>
+  console.log('index page load')
+  window.addEventListener('message', (msgEvt) => {
+    console.log('im index, i recive some request', msgEvt)
+
+    let request
+    try {
+      request = JSON.parse(msgEvt.data)
+    } catch (e) {
+      console.error(e)
+    }
+
+    switch (request?.action) {
+      case 'getUserinfo':
+        msgEvt.source.postMessage(JSON.stringify({ username: 'tom' }), '*')
+        break
+      case 'reLogin':
+        location.href = location.href
+        break
+      default:
+        break
+    }
+  })
+</script>

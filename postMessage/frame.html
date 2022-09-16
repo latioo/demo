@@ -1,0 +1,42 @@
+<div>frame</div>
+<button onclick="getUserinfo()">get userinfo</button>
+<button onclick="toLogin()">relogin</button>
+<div id="message"></div>
+<script>
+  console.log('frame page load')
+  console.log('im frame, click button to get data from index')
+  window.addEventListener('message', (e) => console.log('im frame, i got data', e))
+
+  const postMsgToParent = (request, timeout = 200) =>
+    new Promise((r, j) => {
+      window.addEventListener('message', r, { once: true })
+
+      setTimeout(() => {
+        window.removeEventListener('message', r)
+        j('获取数据超时')
+      }, timeout)
+
+      const payload = typeof request === 'object' ? JSON.stringify(request) : request
+      window.top.postMessage(payload, '*')
+    })
+
+  const getUserinfo = async () => {
+    try {
+      const { data } = await postMsgToParent({
+        action: 'getUserinfo',
+        thirdMenuCode: 'valuationAnalyse',
+      })
+      document.getElementById('message').innerHTML += data
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const toLogin = async () => {
+    try {
+      const msg = await postMsgToParent({
+        action: 'reLogin',
+      })
+    } catch (e) {}
+  }
+</script>
