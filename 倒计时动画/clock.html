@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      .div {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .div:after {
+        content: attr(curTime);
+        color: #333;
+        background-color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .test-color {
+        color: #388bff22;
+      }
+      .test-color {
+        color: #66ddff;
+      }
+      .test-color {
+        color: #66ff66;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="div" class="div"></div>
+  </body>
+  <script>
+    const el = document.getElementById('div')
+    // prop
+    const timeCount = 3 // second
+    const fps = 60
+    const displayConvert = (x) => Math.floor(x) + 1
+    // const displayConvert = (x) => x.toFixed(1)
+    let backgroundColor = '#388bff22'
+    let frontColor = '#66ddff'
+
+    let stoped = false
+    //
+    const frameCount = timeCount * fps
+    let curFrame = 0
+    const loop = setInterval(() => {
+      if (stoped) return
+      curFrame = curFrame >= frameCount ? 1 : curFrame + 1
+      const curTime = (frameCount - curFrame) / fps
+      el.setAttribute('curTime', displayConvert(curTime))
+      const percent = (curFrame / frameCount) * 100
+      el.setAttribute('percent', percent)
+      el.style.backgroundImage = `conic-gradient(${frontColor} ${percent - 0.1}%, ${backgroundColor} ${percent}%)`
+
+      if (curFrame == frameCount) {
+        console.log('count end')
+        //
+        // const temp = backgroundColor
+        // backgroundColor = frontColor
+        // frontColor = temp
+      }
+    }, 1000 / fps)
+  </script>
+</html>
